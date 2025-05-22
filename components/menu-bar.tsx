@@ -145,6 +145,14 @@ export function MenuBar() {
       gradient: `radial-gradient(circle, rgba(245,158,11,0.15) 0%, rgba(217,119,6,0.06) 50%, rgba(180,83,9,0) 100%)`,
       iconColor: `text-${colors.accent}`,
     },
+    {
+      icon: <Sparkles className="h-5 w-5" />,
+      label: "Create FastQuiz",
+      href: "/create-quiz", // Placeholder href, adjust as needed
+      gradient: `radial-gradient(circle, rgba(245,158,11,0.15) 0%, rgba(217,119,6,0.06) 50%, rgba(180,83,9,0) 100%)`, // You might want a different gradient/color
+      iconColor: `text-${colors.accent}`, // You might want a different color
+    },
+
   ]
 
   const itemVariants = {
@@ -374,7 +382,11 @@ export function MenuBar() {
                       <input
                         ref={inputRef}
                         value={quizCode}
-                        onChange={(e) => setQuizCode(e.target.value.toUpperCase())}
+                        onChange={(e) => {
+                          setQuizCode(e.target.value.toUpperCase());
+                          // Implement real-time filtering logic here if needed, e.g., filtering a list of all quizzes
+                          // For now, we'll just update the input value
+                        }}
                         onKeyDown={handleKeyDown}
                         className={`w-full p-3 pl-4 pr-10 bg-background/60 text-foreground font-mono text-lg rounded-l-lg border-y border-l border-border/40 focus:outline-none focus:ring-2 focus:ring-${colors.secondary}/50 uppercase tracking-wider`}
                         placeholder="XX0000"
@@ -441,17 +453,19 @@ export function MenuBar() {
                         Recent Quizzes
                       </h3>
                       <div className="flex flex-wrap gap-2">
-                        {recentQuizzes.map((code) => (
-                          <motion.button
-                            key={code}
-                            onClick={() => setQuizCode(code)}
-                            className={`px-3 py-1 text-sm font-mono bg-background/40 hover:bg-background/80 border border-border/40 rounded-md transition-colors`}
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.98 }}
-                          >
-                            {code}
-                          </motion.button>
-                        ))}
+                        {recentQuizzes
+                          .filter(code => code.includes(quizCode.toUpperCase())) // Filter recent quizzes based on input
+                          .map((code) => (
+                            <motion.button
+                              key={code}
+                              onClick={() => setQuizCode(code)}
+                              className={`px-3 py-1 text-sm font-mono bg-background/40 hover:bg-background/80 border border-border/40 rounded-md transition-colors`}
+                              whileHover={{ scale: 1.05 }}
+                              whileTap={{ scale: 0.98 }}
+                            >
+                              {code}
+                            </motion.button>
+                          ))}
                       </div>
                     </motion.div>
                   )}
